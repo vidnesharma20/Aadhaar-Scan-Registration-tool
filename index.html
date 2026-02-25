@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>3-Step KYC Verification</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://unpkg.com/tesseract.js@4.0.2/dist/tesseract.min.js"></script>
+    <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
+</head>
+<body>
+
+    <!-- Progress Bar -->
+    <div class="steps-bar">
+        <div class="step active" data-step="1">Step 1</div>
+        <div class="step" data-step="2">Step 2</div>
+        <div class="step" data-step="3">Step 3</div>
+    </div>
+
+
+    <!-- STEP 1 -->
+    <div id="step1" class="step-container">
+        <div class="container">
+            <div class="left-box">
+                <video id="camera" autoplay playsinline></video>
+                <img id="preview" class="preview-img" alt="Selfie">
+                <canvas id="canvas" style="display:none;"></canvas>
+
+
+                <div class="button-row">
+                    <button id="captureBtn">Capture Photo</button>
+                    <button id="retakeBtn" disabled>Retake Photo</button>
+                </div>
+            </div>
+
+
+            <div class="right-box">
+                <h2>Instructions</h2>
+                <p>Please follow the ✔️ examples for a valid passport-style photograph.</p>
+                <div class="placeholder-img"><img src="Untitled design.svg" alt="Instructions" class="placeholder-img img"></div>
+                <button id="nextBtn" class="next-btn">Next</button>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- STEP 2 -->
+    <div id="step2" class="step-container" style="display:none;">
+        <div class="container">
+            <div class="left-box">
+                <video id="camera2" autoplay playsinline></video>
+                <img id="preview2" class="preview-img" alt="Aadhar">
+                <canvas id="canvas2" style="display:none;"></canvas>
+
+
+                <div class="button-row">
+                    <button id="captureAadhar">Capture Aadhar</button>
+                    <button id="retakeAadhar" disabled>Retake Aadhar</button>
+                </div>
+            </div>
+
+
+            <div class="right-box">
+                <h2>Aadhar Extracted Data</h2>
+                <div id="aadharResult" class="placeholder-img">
+    Captured data will appear here...
+</div>
+
+<!-- Edit Form (hidden by default) -->
+<div id="editForm" style="display:none; margin-top:20px;">
+    <h3 style="margin-bottom:15px; color:#007bff;">Edit Extracted Data</h3>
+    
+    <div style="margin-bottom:12px;">
+        <label style="display:block; margin-bottom:5px; font-weight:bold;">Name</label>
+        <input type="text" id="editName" style="width:100%; padding:10px; border:1px solid #ccc; border-radius:8px;">
+        <span id="errorName" style="color:red; font-size:13px; display:none;">Please fill this field</span>
+    </div>
+    
+    <div style="margin-bottom:12px;">
+        <label style="display:block; margin-bottom:5px; font-weight:bold;">DOB</label>
+        <input type="text" id="editDOB" placeholder="DD/MM/YYYY" style="width:100%; padding:10px; border:1px solid #ccc; border-radius:8px;">
+        <span id="errorDOB" style="color:red; font-size:13px; display:none;">Please fill this field</span>
+    </div>
+    
+    <div style="margin-bottom:12px;">
+        <label style="display:block; margin-bottom:5px; font-weight:bold;">Gender</label>
+        <select id="editGender" style="width:100%; padding:10px; border:1px solid #ccc; border-radius:8px;">
+            <option value="">Select Gender</option>
+            <option value="MALE">MALE</option>
+            <option value="FEMALE">FEMALE</option>
+            <option value="OTHER">OTHER</option>
+        </select>
+        <span id="errorGender" style="color:red; font-size:13px; display:none;">Please select gender</span>
+    </div>
+    
+    <div style="margin-bottom:12px;">
+        <label style="display:block; margin-bottom:5px; font-weight:bold;">Aadhar Last 4 Digits</label>
+        <input type="text" id="editAadhar" maxlength="4" placeholder="1234" style="width:100%; padding:10px; border:1px solid #ccc; border-radius:8px;">
+        <span id="errorAadhar" style="color:red; font-size:13px; display:none;">Please enter 4 digits</span>
+    </div>
+    
+    <button id="saveEdit" class="next-btn" style="background:#28a745;">Save Changes</button>
+    <button id="cancelEdit" class="next-btn" style="background:#6c757d; margin-top:10px;">Cancel</button>
+</div>
+
+<!-- Edit Button (shown after capture) -->
+<button id="editBtn" class="next-btn" style="display:none; background:#ff9800; margin-top:15px;">
+    ✏️ Edit Information
+</button>
+
+<button id="finalNext" class="next-btn">Next</button>
+            </div>
+        </div>
+    </div>
+
+
+<!-- STEP 3 back aadhar-->
+
+    
+   <!-- STEP 4 – REAL GOVERNMENT-STYLE PRINT-READY CARD -->
+<div id="step3" class="step-container" style="display:none; min-height:100vh; background:#f8fafc; padding:20px;">
+
+    <div class="final-card-wrapper">
+
+        <!-- ================= ID CARD (ONLY THIS DOWNLOADS) ================= -->
+        <div id="printableCard" class="govt-id-card">
+
+            <div class="top-bar">
+                <div class="emblem">भारत</div>
+                <div class="title-hindi">कृषक सम्मान कार्ड</div>
+                <div class="emblem">India</div>
+            </div>
+
+            <div class="card-body">
+
+                <div class="header-text">
+                    <h2>GVT KRISHIKUL</h2>
+                    <p class="subtitle">VIP FARMER ACCESS PASS</p>
+                </div>
+
+                <div class="photo-section">
+                    <div class="circle-frame">
+                        <img id="finalSelfie" src="" alt="Farmer">
+                    </div>
+                    <h3 id="finalName" class="farmer-name">Loading...</h3>
+                </div>
+
+                <div class="details-grid">
+
+                    <!-- ADDRESS -->
+                    <div class="field">
+                        <label>Address</label>
+                        <textarea
+                            id="address"
+                            placeholder="Enter full address"
+                            rows="3"
+                        ></textarea>
+                    </div>
+
+                    <!-- VISIT PASS -->
+                    <div class="field">
+                        <label>Visit Pass</label>
+                        <div class="visit-pass">
+                            <button type="button" onclick="selectPass(1)">1</button>
+                            <button type="button" onclick="selectPass(2)">2</button>
+                            <button type="button" onclick="selectPass(3)">3+</button>
+                        </div>
+                        <input type="hidden" id="visitPass">
+                    </div>
+<div class="thank-you">
+    Thanks for visiting GVT Krishikul
+</div>
+                </div>
+            </div>
+        </div>
+
+        
+
+        <!-- ================= END ID CARD ================= -->
+
+
+        <!-- ✅ DOWNLOAD BUTTON (OUTSIDE CARD – WILL NOT PRINT) -->
+        <button id="downloadBtn" disabled>
+            Download ID Card
+        </button>
+
+    </div>
+</div>
+
+
+    <script src="config.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
