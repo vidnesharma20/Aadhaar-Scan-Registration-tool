@@ -10,7 +10,7 @@ Just **Scan → Extract → Save.**
 
 ## 📸 **What This System Does**
 
-* Opens **mobile or laptop camera**
+* Opens **laptop camera**
 * Takes a clear photo of an Aadhaar card
 * Automatically extracts:
 
